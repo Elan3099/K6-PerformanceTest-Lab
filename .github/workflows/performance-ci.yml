@@ -8,21 +8,22 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Tambahkan ini agar semua container di job ini berbagi network host
+    container:
+      image: node:20 # Menggunakan image node agar kompatibel dengan app kamu
+      options: --network host 
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build and Run API with Docker
+      - name: Build and Run API
         run: |
-          docker build -t my-api .
-          # Gunakan --network host agar port 3000 terbuka di level runner
-          docker run -d --network host --name api-container my-api
-          # Beri waktu sedikit lebih lama agar API benar-benar siap
-          sleep 10 
+          npm install
+          node app.js & # Jalankan di background
+          sleep 10 # Tunggu API siap
 
       - name: Run k6 Load Test
         uses: grafana/k6-action@v0.3.1
         with:
           filename: load-test.js
-          # Tambahkan flag agar container k6 juga menggunakan network host
-          flags: --network host
