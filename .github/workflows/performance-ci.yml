@@ -15,10 +15,14 @@ jobs:
       - name: Build and Run API with Docker
         run: |
           docker build -t my-api .
-          docker run -d -p 3000:3000 --name api-container my-api
-          sleep 5
+          # Gunakan --network host agar port 3000 terbuka di level runner
+          docker run -d --network host --name api-container my-api
+          # Beri waktu sedikit lebih lama agar API benar-benar siap
+          sleep 10 
 
       - name: Run k6 Load Test
         uses: grafana/k6-action@v0.3.1
         with:
           filename: load-test.js
+          # Tambahkan flag agar container k6 juga menggunakan network host
+          flags: --network host
