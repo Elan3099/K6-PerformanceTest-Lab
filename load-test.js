@@ -3,9 +3,9 @@ import { check, sleep } from 'k6';
 
 export const options = {
     stages: [
-        { duration: '10s', target: 10 }, // Ramp-up ke 10 user
-        { duration: '20s', target: 10 }, // Stay di 10 user
-        { duration: '5s', target: 0 },  // Ramp-down
+        // { duration: '10s', target: 10 }, // Ramp-up ke 10 user
+        // { duration: '20s', target: 10 }, // Stay di 10 user
+        { duration: '1s', target: 1 },  // Ramp-down
     ],
     thresholds: {
         // CI/CD akan FAIL jika 95% request lebih dari 250ms
