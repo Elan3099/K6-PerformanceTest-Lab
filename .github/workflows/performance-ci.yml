@@ -25,3 +25,4 @@ jobs:
         uses: grafana/k6-action@v0.3.1
         with:
           filename: load-test.js
+          flags: --network host  # Tambahkan baris ini agar k6 bisa akses localhost
