@@ -6,25 +6,26 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Mengatasi warning Node 20
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: List Files (Debug)
-        run: ls -R # Untuk memastikan file app.js dan Dockerfile terbaca oleh GitHub
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Build and Run API with Docker
+      - name: Install & Start API
         run: |
-          docker build -t my-api .
-          docker run -d -p 3000:3000 --name api-container my-api
-          sleep 10
+          npm install express
+          node app.js & # Menjalankan API di background
+          echo "Waiting for API to start..."
+          sleep 10 # Memberi waktu 10 detik agar API benar-benar siap
+
+      - name: Verify API is Live
+        run: curl -v http://localhost:3000/api/v1/resource
 
       - name: Run k6 Load Test
         uses: grafana/k6-action@v0.3.1
         with:
           filename: load-test.js
-          # Kita hapus flags, dan ganti cara k6 berjalan
-        env:
-          K6_BROWSER_ENABLED: false # Memastikan k6 berjalan ringan

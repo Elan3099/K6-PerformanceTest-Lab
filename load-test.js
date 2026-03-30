@@ -15,7 +15,7 @@ export const options = {
 };
 
 export default function () {
-    const res = http.get('http://127.0.0.1:3000/api/v1/resource');
+const res = http.get('http://localhost:3000/api/v1/resource');
     
     check(res, {
         'status is 200': (r) => r.status === 200,
